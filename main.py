@@ -5,7 +5,15 @@ from utils.nlp_utils import generate_key_points
 from PyPDF2 import PdfReader
 import io
 
-def process_file(file_data, file_name):
+# List of available models
+available_models = [
+    "llama3-70b-8192",
+    "llama3-8b-8192",
+    "mixtral-8x7b-32768",
+    "gemma-7b-it"
+]
+
+def process_file(file_data, file_name, selected_model):
     if file_name.endswith('.pdf'):
         reader = PdfReader(io.BytesIO(file_data))
         text = ''
@@ -27,7 +35,7 @@ def process_file(file_data, file_name):
     for chunk in chunks:
         sentences = ' '.join(list(chunk))
         prompt = f"Generate a concise summary of the following text:\n\n{sentences}\n\n"
-        response_text = generate_summary(prompt)
+        response_text = generate_summary(prompt, selected_model)
         summary_responses.append(response_text)
 
     full_summary = " ".join(summary_responses)
@@ -42,8 +50,12 @@ def process_file(file_data, file_name):
 
 def main():
     st.set_page_config(layout="wide")
-    st.title('Earning Calls & Investors Reports Analyzer')
-    st.text('Analyze Calls, Q&A sessions and much more using GROQ - Fastest AI Inference Infrastructure')
+    st.title('Earning Calls & Investor Reports Analysis')
+    st.text('Analyze Calls, Q&A sessions and much more with GROQ - Fastest AI Infererence Infrastructure')
+
+    # Add a dropdown for model selection in the sidebar
+    st.sidebar.title("Configurations")
+    selected_model = st.sidebar.selectbox('Select a Large Language Model:', available_models)
 
     upload_file = st.file_uploader('Upload your transcript file (PDF or TXT)', type=['pdf', 'txt'])
 
@@ -52,18 +64,18 @@ def main():
         file_name = upload_file.name
 
         if st.button('Analyze'):
-            preview_text, full_summary, key_points = process_file(file_data, file_name)
+            preview_text, full_summary, key_points = process_file(file_data, file_name, selected_model)
 
             st.text('File Preview:')
             st.text(preview_text)
 
-            st.subheader('Call Summary:')
+            st.subheader('Full Summary:')
             full_summary_without_header = full_summary.replace("Here is a concise summary of the text:", "")
             st.markdown(f"<pre style='white-space: pre-wrap;'>{full_summary_without_header}</pre>", unsafe_allow_html=True)
 
-            st.subheader('Key Highlights:')
+            st.subheader('Key Points:')
             for idx, point in enumerate(key_points, start=1):
-                st.markdown(f"{idx}. {point.strip()}", unsafe_allow_html=True)
+                st.markdown(f"{idx}. {point}", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()

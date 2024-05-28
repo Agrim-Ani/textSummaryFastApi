@@ -10,10 +10,10 @@ GROQ_API_KEY = config["GROQ_API_KEY"]
 
 client = Groq(api_key=GROQ_API_KEY)
 
-def generate_summary(prompt):
+def generate_summary(prompt, model_name):
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
-        model="llama3-8b-8192",
+        model=model_name,
     )
     summary = chat_completion.choices[0].message.content
     return re.sub(r"Here is a concise summary of the text: ", "", summary)
