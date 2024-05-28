@@ -64,7 +64,8 @@ def main():
         file_name = upload_file.name
 
         if st.button('Analyze'):
-            preview_text, full_summary, key_points = process_file(file_data, file_name, selected_model)
+            with st.spinner('Generating, Please wait...'):
+                preview_text, full_summary, key_points = process_file(file_data, file_name, selected_model)
 
             st.text('File Preview:')
             st.text(preview_text)

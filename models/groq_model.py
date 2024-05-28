@@ -16,4 +16,4 @@ def generate_summary(prompt, model_name):
         model=model_name,
     )
     summary = chat_completion.choices[0].message.content
-    return re.sub(r"Here is a concise summary of the text: ", "", summary)
+    return re.sub(r"^(Here is a concise summary of the text:|Summary:)", "", summary)
