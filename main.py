@@ -1,5 +1,8 @@
+# main.py
+
 import streamlit as st
 from utils.file_processing import process_file
+from utils.word_count import count_words
 
 def main():
     st.set_page_config(layout="wide")
@@ -38,6 +41,16 @@ def main():
             st.subheader('Key Points:')
             for idx, point in enumerate(key_points, start=1):
                 st.markdown(f"{idx}. {point}", unsafe_allow_html=True)
+
+            original_word_count = count_words(file_data.decode("utf-8"))
+            summary_word_count = count_words(full_summary)
+
+            st.subheader('Comparative Analysis:')
+            col1, col2 = st.columns(2)
+            with col1:
+                st.text(f"Original File: {original_word_count} words")
+            with col2:
+                st.text(f"Generated Summary: {summary_word_count} words")
 
 if __name__ == "__main__":
     main()
