@@ -1,18 +1,10 @@
 import numpy as np
-from models.groq_model import generate_summary
-from utils.nlp_utils import generate_key_points
+from app.models.groq_model import generate_summary
+from app.utils.nlp_utils import generate_key_points
 from PyPDF2 import PdfReader
 import io
 
-def process_file(file_data, file_name, selected_model):
-    if file_name.endswith('.pdf'):
-        reader = PdfReader(io.BytesIO(file_data))
-        text = ''
-        for page in reader.pages:
-            text += page.extract_text() + '\n'
-    else:
-        text = file_data.decode("utf-8")
-
+def process_file(text, selected_model):
     lines = text.split('\n')
     if len(lines) > 3:
         preview_text = '\n'.join(lines[:3]) + " ..."

@@ -1,4 +1,4 @@
 {
-    "GROQ_API_KEY": "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"
+    "GROQ_API_KEY": "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",
+    "run": "uvicorn app.main:app --reload"
 }
-  
